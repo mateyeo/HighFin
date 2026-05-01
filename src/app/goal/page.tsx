@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useApp } from "@/context/AppContext";
+import { useApp } from "@/frontend/context/AppContext";
 import type { GoalType, GoalPlan } from "@/types";
-import Button from "@/components/ui/Button";
-import Card from "@/components/ui/Card";
+import Button from "@/frontend/components/ui/Button";
+import Card from "@/frontend/components/ui/Card";
 
 const GOAL_OPTIONS: { type: GoalType; label: string; icon: string; example: string }[] = [
   { type: "retirement", label: "Retirement",    icon: "🌴", example: "Build long-term wealth for when you stop working." },

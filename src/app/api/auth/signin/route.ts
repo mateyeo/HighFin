@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import { connectDB } from "@/lib/db";
-import { signToken } from "@/lib/jwt";
-import UserModel from "@/models/UserModel";
+import { connectDB } from "@/backend/lib/db";
+import { signToken } from "@/backend/lib/jwt";
+import UserModel from "@/backend/models/UserModel";
 
 export async function POST(request: Request) {
   try {

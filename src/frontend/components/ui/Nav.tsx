@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useApp } from "@/context/AppContext";
+import { useApp } from "@/frontend/context/AppContext";
 
 const studentLinks = [
   { href: "/dashboard", label: "Home" },

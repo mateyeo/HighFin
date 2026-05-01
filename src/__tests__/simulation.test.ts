@@ -1,4 +1,4 @@
-import { runSimulation } from "@/lib/simulation";
+import { runSimulation } from "@/frontend/lib/simulation";
 import type { AssetAllocation } from "@/types";
 
 const balanced: AssetAllocation = { stocks: 30, bonds: 30, mutualFunds: 20, indexFunds: 20 };

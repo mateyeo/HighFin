@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
-import { connectDB } from "@/lib/db";
-import { getAuthUser } from "@/lib/jwt";
-import AssignmentModel from "@/models/AssignmentModel";
+import { connectDB } from "@/backend/lib/db";
+import { getAuthUser } from "@/backend/lib/jwt";
+import { normalize, normalizeAll } from "@/backend/lib/normalize";
+import AssignmentModel from "@/backend/models/AssignmentModel";
 
 export async function GET(request: Request) {
   try {
@@ -15,7 +16,7 @@ export async function GET(request: Request) {
       .sort({ createdAt: -1 })
       .lean();
 
-    return NextResponse.json(assignments);
+    return NextResponse.json(normalizeAll(assignments));
   } catch (err) {
     console.error("[GET /api/teacher/assignments]", err);
     return NextResponse.json({ error: "Unauthorized or server error." }, { status: 401 });
@@ -44,7 +45,7 @@ export async function POST(request: Request) {
       classCode:   body.classCode.trim(),
     });
 
-    return NextResponse.json(assignment.toObject(), { status: 201 });
+    return NextResponse.json(normalize(assignment.toObject()), { status: 201 });
   } catch (err) {
     console.error("[POST /api/teacher/assignments]", err);
     return NextResponse.json({ error: "Unauthorized or server error." }, { status: 401 });

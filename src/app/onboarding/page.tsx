@@ -2,10 +2,10 @@
 
 import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useApp } from "@/context/AppContext";
+import { useApp } from "@/frontend/context/AppContext";
 import type { Role } from "@/types";
-import Button from "@/components/ui/Button";
-import Card from "@/components/ui/Card";
+import Button from "@/frontend/components/ui/Button";
+import Card from "@/frontend/components/ui/Card";
 
 function OnboardingForm() {
   const { signin } = useApp();

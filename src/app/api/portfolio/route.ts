@@ -1,14 +1,15 @@
 import { NextResponse } from "next/server";
-import { connectDB } from "@/lib/db";
-import { getAuthUser } from "@/lib/jwt";
-import PortfolioModel from "@/models/PortfolioModel";
+import { connectDB } from "@/backend/lib/db";
+import { getAuthUser } from "@/backend/lib/jwt";
+import { normalize } from "@/backend/lib/normalize";
+import PortfolioModel from "@/backend/models/PortfolioModel";
 
 export async function GET(request: Request) {
   try {
     const { userId } = getAuthUser(request);
     await connectDB();
     const portfolio = await PortfolioModel.findOne({ userId }).lean();
-    return NextResponse.json(portfolio ?? null);
+    return NextResponse.json(portfolio ? normalize(portfolio) : null);
   } catch (err) {
     console.error("[GET /api/portfolio]", err);
     return NextResponse.json({ error: "Unauthorized or server error." }, { status: 401 });
@@ -33,7 +34,7 @@ export async function POST(request: Request) {
       { upsert: true, new: true }
     ).lean();
 
-    return NextResponse.json(portfolio);
+    return NextResponse.json(portfolio ? normalize(portfolio) : null);
   } catch (err) {
     console.error("[POST /api/portfolio]", err);
     return NextResponse.json({ error: "Unauthorized or server error." }, { status: 401 });

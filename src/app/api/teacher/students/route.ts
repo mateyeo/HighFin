@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
-import { connectDB } from "@/lib/db";
-import { getAuthUser } from "@/lib/jwt";
-import UserModel from "@/models/UserModel";
-import QuizResultModel from "@/models/QuizResultModel";
-import GoalPlanModel from "@/models/GoalPlanModel";
-import PortfolioModel from "@/models/PortfolioModel";
-import SimulationModel from "@/models/SimulationModel";
+import { connectDB } from "@/backend/lib/db";
+import { getAuthUser } from "@/backend/lib/jwt";
+import UserModel from "@/backend/models/UserModel";
+import QuizResultModel from "@/backend/models/QuizResultModel";
+import GoalPlanModel from "@/backend/models/GoalPlanModel";
+import PortfolioModel from "@/backend/models/PortfolioModel";
+import SimulationModel from "@/backend/models/SimulationModel";
 
 export async function GET(request: Request) {
   try {

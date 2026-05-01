@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useApp } from "@/context/AppContext";
+import { useApp } from "@/frontend/context/AppContext";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import Button from "@/components/ui/Button";
+import Button from "@/frontend/components/ui/Button";
 
 export default function LandingPage() {
   const { user } = useApp();

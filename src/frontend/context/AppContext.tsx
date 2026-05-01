@@ -9,8 +9,8 @@ import type {
   Portfolio,
   SimulationResult,
 } from "@/types";
-import { loadState, saveState, clearState } from "@/lib/storage";
-import { getToken, setToken, clearToken, apiGet, apiPost } from "@/lib/apiClient";
+import { loadState, saveState, clearState } from "@/frontend/lib/storage";
+import { getToken, setToken, clearToken, apiGet, apiPost } from "@/frontend/lib/apiClient";
 
 interface AppContextValue extends AppState {
   hydrated: boolean;

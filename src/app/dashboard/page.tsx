@@ -3,10 +3,10 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { useApp } from "@/context/AppContext";
-import Card from "@/components/ui/Card";
-import Button from "@/components/ui/Button";
-import { PROFILE_DESCRIPTIONS } from "@/lib/quiz";
+import { useApp } from "@/frontend/context/AppContext";
+import Card from "@/frontend/components/ui/Card";
+import Button from "@/frontend/components/ui/Button";
+import { PROFILE_DESCRIPTIONS } from "@/frontend/lib/quiz";
 
 interface Step {
   href: string;

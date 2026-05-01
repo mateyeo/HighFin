@@ -1,14 +1,15 @@
 import { NextResponse } from "next/server";
-import { connectDB } from "@/lib/db";
-import { getAuthUser } from "@/lib/jwt";
-import SimulationModel from "@/models/SimulationModel";
+import { connectDB } from "@/backend/lib/db";
+import { getAuthUser } from "@/backend/lib/jwt";
+import { normalize } from "@/backend/lib/normalize";
+import SimulationModel from "@/backend/models/SimulationModel";
 
 export async function GET(request: Request) {
   try {
     const { userId } = getAuthUser(request);
     await connectDB();
     const sim = await SimulationModel.findOne({ userId }).lean();
-    return NextResponse.json(sim ?? null);
+    return NextResponse.json(sim ? normalize(sim) : null);
   } catch (err) {
     console.error("[GET /api/simulation]", err);
     return NextResponse.json({ error: "Unauthorized or server error." }, { status: 401 });
@@ -35,7 +36,7 @@ export async function POST(request: Request) {
       { upsert: true, new: true }
     ).lean();
 
-    return NextResponse.json(sim);
+    return NextResponse.json(sim ? normalize(sim) : null);
   } catch (err) {
     console.error("[POST /api/simulation]", err);
     return NextResponse.json({ error: "Unauthorized or server error." }, { status: 401 });

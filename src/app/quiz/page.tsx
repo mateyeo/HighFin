@@ -2,12 +2,12 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useApp } from "@/context/AppContext";
-import { QUIZ_QUESTIONS, buildQuizResult, PROFILE_DESCRIPTIONS } from "@/lib/quiz";
+import { useApp } from "@/frontend/context/AppContext";
+import { QUIZ_QUESTIONS, buildQuizResult, PROFILE_DESCRIPTIONS } from "@/frontend/lib/quiz";
 import type { QuizAnswer } from "@/types";
-import Button from "@/components/ui/Button";
-import Card from "@/components/ui/Card";
-import ProgressBar from "@/components/ui/ProgressBar";
+import Button from "@/frontend/components/ui/Button";
+import Card from "@/frontend/components/ui/Card";
+import ProgressBar from "@/frontend/components/ui/ProgressBar";
 
 export default function QuizPage() {
   const { user, setQuizResult, quizResult } = useApp();

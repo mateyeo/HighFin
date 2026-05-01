@@ -2,12 +2,12 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useApp } from "@/context/AppContext";
-import { runSimulation, SCENARIOS } from "@/lib/simulation";
+import { useApp } from "@/frontend/context/AppContext";
+import { runSimulation, SCENARIOS } from "@/frontend/lib/simulation";
 import type { ScenarioId } from "@/types";
-import Button from "@/components/ui/Button";
-import Card from "@/components/ui/Card";
-import Tooltip from "@/components/ui/Tooltip";
+import Button from "@/frontend/components/ui/Button";
+import Card from "@/frontend/components/ui/Card";
+import Tooltip from "@/frontend/components/ui/Tooltip";
 import {
   AreaChart,
   Area,

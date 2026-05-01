@@ -2,11 +2,11 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useApp } from "@/context/AppContext";
-import { apiGet, apiPost } from "@/lib/apiClient";
+import { useApp } from "@/frontend/context/AppContext";
+import { apiGet, apiPost } from "@/frontend/lib/apiClient";
 import type { Assignment, StudentProgress } from "@/types";
-import Button from "@/components/ui/Button";
-import Card from "@/components/ui/Card";
+import Button from "@/frontend/components/ui/Button";
+import Card from "@/frontend/components/ui/Card";
 
 const STEPS = ["Quiz", "Goal", "Portfolio", "Simulation"] as const;
 

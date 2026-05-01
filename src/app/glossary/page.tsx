@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { GLOSSARY } from "@/lib/glossary";
-import Card from "@/components/ui/Card";
+import { GLOSSARY } from "@/frontend/lib/glossary";
+import Card from "@/frontend/components/ui/Card";
 
 export default function GlossaryPage() {
   const [open, setOpen] = useState<string | null>(null);

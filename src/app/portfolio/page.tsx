@@ -2,12 +2,12 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useApp } from "@/context/AppContext";
+import { useApp } from "@/frontend/context/AppContext";
 import type { AssetAllocation, Portfolio } from "@/types";
-import { RECOMMENDED_ALLOCATIONS } from "@/lib/quiz";
-import Button from "@/components/ui/Button";
-import Card from "@/components/ui/Card";
-import Tooltip from "@/components/ui/Tooltip";
+import { RECOMMENDED_ALLOCATIONS } from "@/frontend/lib/quiz";
+import Button from "@/frontend/components/ui/Button";
+import Card from "@/frontend/components/ui/Card";
+import Tooltip from "@/frontend/components/ui/Tooltip";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip } from "recharts";
 
 const ASSET_COLORS: Record<keyof AssetAllocation, string> = {

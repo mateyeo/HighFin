@@ -2,11 +2,11 @@
 
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { useApp } from "@/context/AppContext";
-import { PROFILE_DESCRIPTIONS, RECOMMENDED_ALLOCATIONS } from "@/lib/quiz";
-import { SCENARIOS } from "@/lib/simulation";
-import Button from "@/components/ui/Button";
-import Card from "@/components/ui/Card";
+import { useApp } from "@/frontend/context/AppContext";
+import { PROFILE_DESCRIPTIONS, RECOMMENDED_ALLOCATIONS } from "@/frontend/lib/quiz";
+import { SCENARIOS } from "@/frontend/lib/simulation";
+import Button from "@/frontend/components/ui/Button";
+import Card from "@/frontend/components/ui/Card";
 
 function formatCurrency(n: number) {
   return n.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });

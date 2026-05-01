@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
-import { AppProvider } from "@/context/AppContext";
-import Nav from "@/components/ui/Nav";
+import { AppProvider } from "@/frontend/context/AppContext";
+import Nav from "@/frontend/components/ui/Nav";
 
 export const metadata: Metadata = {
   title: "HighFin — Learn Investing",

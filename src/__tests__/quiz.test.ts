@@ -1,4 +1,4 @@
-import { scoreQuiz, buildQuizResult, QUIZ_QUESTIONS } from "@/lib/quiz";
+import { scoreQuiz, buildQuizResult, QUIZ_QUESTIONS } from "@/frontend/lib/quiz";
 import type { QuizAnswer } from "@/types";
 
 function allAnswers(value: number): QuizAnswer[] {
