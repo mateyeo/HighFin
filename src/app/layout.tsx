@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { AppProvider } from "@/frontend/context/AppContext";
 import Nav from "@/frontend/components/ui/Nav";
+import ChatPanelLoader from "@/frontend/components/ui/ChatPanelLoader";
 
 export const metadata: Metadata = {
   title: "HighFin — Learn Investing",
@@ -20,6 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <AppProvider>
           <Nav />
           <main className="flex-1 pb-20 md:pb-0">{children}</main>
+          <ChatPanelLoader />
         </AppProvider>
       </body>
     </html>

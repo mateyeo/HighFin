@@ -10,56 +10,67 @@ import type {
   SimulationResult,
 } from "@/types";
 import { loadState, saveState, clearState } from "@/frontend/lib/storage";
-import { getToken, setToken, clearToken, apiGet, apiPost } from "@/frontend/lib/apiClient";
+import { apiGet, apiPost } from "@/frontend/lib/apiClient";
 
 interface AppContextValue extends AppState {
   hydrated: boolean;
-  setUser: (user: User | null) => void;
-  setQuizResult: (result: QuizResult | null) => void;
-  setGoalPlan: (plan: GoalPlan | null) => void;
-  setPortfolio: (portfolio: Portfolio | null) => void;
+  authLoading: boolean;
+  setQuizResult:       (result: QuizResult | null)       => void;
+  setGoalPlan:         (plan: GoalPlan | null)           => void;
+  setPortfolio:        (portfolio: Portfolio | null)     => void;
   setSimulationResult: (result: SimulationResult | null) => void;
-  signin: (name: string, email: string, role: string, classCode?: string) => Promise<void>;
-  logout: () => void;
+  register: (name: string, email: string, password: string, role: string, classCode?: string) => Promise<void>;
+  login:    (email: string, password: string) => Promise<void>;
+  logout:   () => Promise<void>;
 }
 
 const AppContext = createContext<AppContextValue | null>(null);
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
-  const [state, setState] = useState<AppState>(() => ({
-    user: null,
-    quizResult: null,
-    goalPlan: null,
-    portfolio: null,
+  const [state, setState] = useState<AppState>({
+    user:             null,
+    quizResult:       null,
+    goalPlan:         null,
+    portfolio:        null,
     simulationResult: null,
-  }));
-  const [hydrated, setHydrated] = useState(false);
+  });
+  const [hydrated,    setHydrated]    = useState(false);
+  const [authLoading, setAuthLoading] = useState(true);
 
-  // On mount: load from localStorage immediately, then sync from API
   useEffect(() => {
+    // Load localStorage draft immediately so pages render without flicker
     const local = loadState();
-    setState(local);
-
-    if (local.user && getToken()) {
-      // Hydrate server data in background
-      syncFromServer(local.user.id).finally(() => setHydrated(true));
-    } else {
-      setHydrated(true);
+    if (local.user || local.quizResult || local.goalPlan) {
+      setState(local);
     }
+
+    // Check if there is a valid session (httpOnly cookie sent automatically)
+    apiGet<User>("/api/auth/me").then((user) => {
+      if (user) {
+        syncFromServer(user).finally(() => {
+          setHydrated(true);
+          setAuthLoading(false);
+        });
+      } else {
+        // Guest — keep localStorage draft, but clear any stale user object
+        setState((prev) => ({ ...prev, user: null }));
+        setHydrated(true);
+        setAuthLoading(false);
+      }
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  async function syncFromServer(userId: string) {
+  async function syncFromServer(user: User) {
     const [quiz, goal, portfolio, sim] = await Promise.all([
       apiGet<QuizResult>("/api/quiz"),
       apiGet<GoalPlan>("/api/goal"),
       apiGet<Portfolio>("/api/portfolio"),
       apiGet<SimulationResult>("/api/simulation"),
     ]);
-
     setState((prev) => {
       const next: AppState = {
-        ...prev,
+        user,
         quizResult:       quiz       ?? prev.quizResult,
         goalPlan:         goal       ?? prev.goalPlan,
         portfolio:        portfolio  ?? prev.portfolio,
@@ -78,30 +89,48 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     });
   }
 
-  async function signin(name: string, email: string, role: string, classCode?: string) {
-    const res = await apiPost<{ token: string; user: User }>("/api/auth/signin", {
-      name,
-      email,
-      role,
-      classCode,
+  async function register(
+    name: string,
+    email: string,
+    password: string,
+    role: string,
+    classCode?: string
+  ) {
+    const res = await fetch("/api/auth/register", {
+      method:      "POST",
+      credentials: "same-origin",
+      headers:     { "Content-Type": "application/json" },
+      body:        JSON.stringify({ name, email, password, role, classCode }),
     });
-    if (!res) throw new Error("Sign-in failed. Check your connection and try again.");
-
-    setToken(res.token);
-    update({ user: res.user });
-
-    // Pull any existing server data for this account
-    await syncFromServer(res.user.id);
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error ?? "Registration failed.");
   }
 
-  function logout() {
-    clearToken();
+  async function login(email: string, password: string) {
+    const res = await fetch("/api/auth/login", {
+      method:      "POST",
+      credentials: "same-origin",
+      headers:     { "Content-Type": "application/json" },
+      body:        JSON.stringify({ email, password }),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      const err = new Error(data.error ?? "Login failed.") as Error & { code?: string; email?: string };
+      err.code  = data.code;
+      err.email = data.email;
+      throw err;
+    }
+    await syncFromServer(data.user as User);
+  }
+
+  async function logout() {
+    await fetch("/api/auth/logout", { method: "POST", credentials: "same-origin" });
     clearState();
     setState({
-      user: null,
-      quizResult: null,
-      goalPlan: null,
-      portfolio: null,
+      user:             null,
+      quizResult:       null,
+      goalPlan:         null,
+      portfolio:        null,
       simulationResult: null,
     });
   }
@@ -111,29 +140,30 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       value={{
         ...state,
         hydrated,
-        setUser: (user) => update({ user }),
+        authLoading,
 
         setQuizResult: (quizResult) => {
           update({ quizResult });
-          if (quizResult) apiPost("/api/quiz", quizResult);
+          if (quizResult && state.user) apiPost("/api/quiz", quizResult);
         },
 
         setGoalPlan: (goalPlan) => {
           update({ goalPlan });
-          if (goalPlan) apiPost("/api/goal", goalPlan);
+          if (goalPlan && state.user) apiPost("/api/goal", goalPlan);
         },
 
         setPortfolio: (portfolio) => {
           update({ portfolio });
-          if (portfolio) apiPost("/api/portfolio", portfolio);
+          if (portfolio && state.user) apiPost("/api/portfolio", portfolio);
         },
 
         setSimulationResult: (simulationResult) => {
           update({ simulationResult });
-          if (simulationResult) apiPost("/api/simulation", simulationResult);
+          if (simulationResult && state.user) apiPost("/api/simulation", simulationResult);
         },
 
-        signin,
+        register,
+        login,
         logout,
       }}
     >

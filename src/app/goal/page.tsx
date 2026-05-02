@@ -30,7 +30,7 @@ export default function GoalPage() {
   const [timeHorizon, setTimeHorizon] = useState(existing?.timeHorizon ?? 10);
   const [monthly, setMonthly] = useState(existing?.monthlyContribution ?? 200);
 
-  if (!user) { router.replace("/onboarding"); return null; }
+  if (!user) { router.replace("/login"); return null; }
   if (!quizResult) { router.replace("/quiz"); return null; }
 
   function handleSave() {

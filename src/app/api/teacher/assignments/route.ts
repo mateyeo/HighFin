@@ -1,10 +1,10 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/backend/lib/db";
 import { getAuthUser } from "@/backend/lib/jwt";
 import { normalize, normalizeAll } from "@/backend/lib/normalize";
 import AssignmentModel from "@/backend/models/AssignmentModel";
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   try {
     const { userId, role } = getAuthUser(request);
     if (role !== "teacher") {
@@ -23,7 +23,7 @@ export async function GET(request: Request) {
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     const { userId, role } = getAuthUser(request);
     if (role !== "teacher") {

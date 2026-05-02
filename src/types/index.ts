@@ -6,6 +6,18 @@ export interface User {
   email: string;
   role: Role;
   classCode?: string;
+  emailVerified: boolean;
+  createdAt: string;
+}
+
+export type ChatRole = "user" | "assistant";
+
+export interface ChatMessage {
+  id?: string;
+  userId?: string;
+  role: ChatRole;
+  content: string;
+  sources?: { topic: string; source: string; url: string }[];
   createdAt: string;
 }
 

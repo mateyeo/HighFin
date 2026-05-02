@@ -1,10 +1,10 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/backend/lib/db";
 import { getAuthUser } from "@/backend/lib/jwt";
 import { normalize } from "@/backend/lib/normalize";
 import PortfolioModel from "@/backend/models/PortfolioModel";
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   try {
     const { userId } = getAuthUser(request);
     await connectDB();
@@ -16,7 +16,7 @@ export async function GET(request: Request) {
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     const { userId } = getAuthUser(request);
     const body = await request.json();

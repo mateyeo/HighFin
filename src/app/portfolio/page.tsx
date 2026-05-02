@@ -42,7 +42,7 @@ export default function PortfolioPage() {
 
   const [alloc, setAlloc] = useState<AssetAllocation>(initial);
 
-  if (!user) { router.replace("/onboarding"); return null; }
+  if (!user) { router.replace("/login"); return null; }
   if (!goalPlan) { router.replace("/goal"); return null; }
 
   const total = alloc.stocks + alloc.bonds + alloc.mutualFunds + alloc.indexFunds;

@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/backend/lib/db";
 import { getAuthUser } from "@/backend/lib/jwt";
 import UserModel from "@/backend/models/UserModel";
@@ -7,7 +7,7 @@ import GoalPlanModel from "@/backend/models/GoalPlanModel";
 import PortfolioModel from "@/backend/models/PortfolioModel";
 import SimulationModel from "@/backend/models/SimulationModel";
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   try {
     const { userId, role } = getAuthUser(request);
     if (role !== "teacher") {

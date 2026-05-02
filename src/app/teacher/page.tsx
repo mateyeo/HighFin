@@ -39,7 +39,7 @@ export default function TeacherDashboard() {
     });
   }, [user]);
 
-  if (!user) { router.replace("/onboarding"); return null; }
+  if (!user) { router.replace("/login"); return null; }
   if (user.role !== "teacher") { router.replace("/dashboard"); return null; }
 
   const completedAll = students.filter((s) => s.simulationDone).length;

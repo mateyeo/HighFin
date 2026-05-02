@@ -35,7 +35,7 @@ export default function SimulationPage() {
   const [running, setRunning] = useState(false);
   const [result, setResult] = useState(simulationResult);
 
-  if (!user) { router.replace("/onboarding"); return null; }
+  if (!user) { router.replace("/login"); return null; }
   if (!portfolio) { router.replace("/portfolio"); return null; }
 
   const monthly = goalPlan?.monthlyContribution ?? 200;

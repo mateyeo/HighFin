@@ -51,7 +51,7 @@ export default function QuizPage() {
   }
 
   if (!user) {
-    router.replace("/onboarding");
+    router.replace("/login");
     return null;
   }
 

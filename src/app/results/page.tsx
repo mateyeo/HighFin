@@ -16,7 +16,7 @@ export default function ResultsPage() {
   const { user, quizResult, goalPlan, portfolio, simulationResult } = useApp();
   const router = useRouter();
 
-  if (!user) { router.replace("/onboarding"); return null; }
+  if (!user) { router.replace("/login"); return null; }
 
   const profile = quizResult ? PROFILE_DESCRIPTIONS[quizResult.riskProfile] : null;
   const recommended = quizResult ? RECOMMENDED_ALLOCATIONS[quizResult.riskProfile] : null;

@@ -21,11 +21,11 @@ export default function DashboardPage() {
   const router = useRouter();
 
   useEffect(() => {
-    if (!user) router.replace("/onboarding");
-    else if (user.role === "teacher") router.replace("/teacher");
+    if (user?.role === "teacher") router.replace("/teacher");
   }, [user, router]);
 
-  if (!user || user.role === "teacher") return null;
+  if (!user) return null;
+  if (user.role === "teacher") return null;
 
   const steps: Step[] = [
     {
