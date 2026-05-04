@@ -1,4 +1,5 @@
 services:
+  # ── Full-stack web app (frontend + backend via Next.js) ────────────
   - type: web
     name: highfin
     runtime: node
@@ -10,19 +11,19 @@ services:
       - key: NODE_ENV
         value: production
 
-      # ── Database ────────────────────────────────────────────────────
+      # ── Database ──────────────────────────────────────────────────
       - key: MONGODB_URI
         sync: false
 
-      # ── Auth ────────────────────────────────────────────────────────
+      # ── Auth ──────────────────────────────────────────────────────
       - key: JWT_SECRET
         sync: false
 
-      # ── AI ──────────────────────────────────────────────────────────
+      # ── AI ────────────────────────────────────────────────────────
       - key: ANTHROPIC_API_KEY
         sync: false
 
-      # ── Email (SMTP) ─────────────────────────────────────────────────
+      # ── Email (SMTP) ──────────────────────────────────────────────
       - key: SMTP_HOST
         sync: false
       - key: SMTP_PORT
@@ -36,6 +37,54 @@ services:
       - key: SMTP_FROM
         sync: false
 
-      # ── Frontend (public) ────────────────────────────────────────────
+      # ── Public ────────────────────────────────────────────────────
+      - key: NEXT_PUBLIC_APP_URL
+        sync: false
+
+  # ── Backend API service (src/backend — API routes + models + lib) ──
+  - type: web
+    name: highfin-backend
+    runtime: node
+    plan: free
+    rootDir: .
+    buildCommand: npm install && npm run build
+    startCommand: node node_modules/next/dist/bin/next start
+    healthCheckPath: /api/auth/me
+    envVars:
+      - key: NODE_ENV
+        value: production
+
+      # ── Database ──────────────────────────────────────────────────
+      # src/backend/lib/db.ts → MONGODB_URI
+      - key: MONGODB_URI
+        sync: false
+
+      # ── Auth ──────────────────────────────────────────────────────
+      # src/backend/lib/jwt.ts → JWT_SECRET
+      - key: JWT_SECRET
+        sync: false
+
+      # ── AI ────────────────────────────────────────────────────────
+      # src/backend/api/chat.ts → ANTHROPIC_API_KEY
+      - key: ANTHROPIC_API_KEY
+        sync: false
+
+      # ── Email ─────────────────────────────────────────────────────
+      # src/backend/lib/mailer.ts → SMTP_*
+      - key: SMTP_HOST
+        sync: false
+      - key: SMTP_PORT
+        sync: false
+      - key: SMTP_SECURE
+        sync: false
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false
+      - key: SMTP_FROM
+        sync: false
+
+      # ── App URL (used by mailer for email links) ───────────────────
+      # src/backend/lib/mailer.ts → NEXT_PUBLIC_APP_URL
       - key: NEXT_PUBLIC_APP_URL
         sync: false
