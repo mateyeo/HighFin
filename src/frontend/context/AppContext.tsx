@@ -12,6 +12,7 @@ import type {
 } from "@/types";
 import { loadState, saveState, clearState } from "@/frontend/lib/storage";
 import { apiGet, apiPost } from "@/frontend/lib/apiClient";
+import { fetchApi } from "@/frontend/lib/config";
 
 interface AppContextValue extends AppState {
   hydrated: boolean;
@@ -102,11 +103,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     role: string,
     classCode?: string
   ) {
-    const res = await fetch("/api/auth/register", {
-      method:      "POST",
-      credentials: "same-origin",
-      headers:     { "Content-Type": "application/json" },
-      body:        JSON.stringify({ name, email, password, role, classCode }),
+    const res = await fetchApi("/api/auth/register", {
+      method: "POST",
+      body:   JSON.stringify({ name, email, password, role, classCode }),
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error ?? "Registration failed.");
@@ -115,11 +114,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   }
 
   async function login(email: string, password: string) {
-    const res = await fetch("/api/auth/login", {
-      method:      "POST",
-      credentials: "same-origin",
-      headers:     { "Content-Type": "application/json" },
-      body:        JSON.stringify({ email, password }),
+    const res = await fetchApi("/api/auth/login", {
+      method: "POST",
+      body:   JSON.stringify({ email, password }),
     });
     const data = await res.json();
     if (!res.ok) {
@@ -132,7 +129,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   }
 
   async function logout() {
-    await fetch("/api/auth/logout", { method: "POST", credentials: "same-origin" });
+    await fetchApi("/api/auth/logout", { method: "POST" });
     clearState();
     setState({
       user:             null,
