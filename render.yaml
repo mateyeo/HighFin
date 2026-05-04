@@ -1,5 +1,7 @@
 services:
-  # ── Full-stack web app (frontend + backend via Next.js) ────────────
+  # ── Frontend service (Next.js pages — src/frontend/pages/) ─────────
+  # NEXT_PUBLIC_APP_URL must point to the highfin-backend service URL
+  # so all /api/* calls from the browser reach the backend.
   - type: web
     name: highfin
     runtime: node
@@ -11,37 +13,13 @@ services:
       - key: NODE_ENV
         value: production
 
-      # ── Database ──────────────────────────────────────────────────
-      - key: MONGODB_URI
-        sync: false
-
-      # ── Auth ──────────────────────────────────────────────────────
-      - key: JWT_SECRET
-        sync: false
-
-      # ── AI ────────────────────────────────────────────────────────
-      - key: ANTHROPIC_API_KEY
-        sync: false
-
-      # ── Email (SMTP) ──────────────────────────────────────────────
-      - key: SMTP_HOST
-        sync: false
-      - key: SMTP_PORT
-        sync: false
-      - key: SMTP_SECURE
-        sync: false
-      - key: SMTP_USER
-        sync: false
-      - key: SMTP_PASS
-        sync: false
-      - key: SMTP_FROM
-        sync: false
-
-      # ── Public ────────────────────────────────────────────────────
+      # Set to the backend service URL: https://highfin-backend.onrender.com
       - key: NEXT_PUBLIC_APP_URL
         sync: false
 
   # ── Backend API service (src/backend — API routes + models + lib) ──
+  # NEXT_PUBLIC_APP_URL must point to this service's own URL
+  # so the mailer builds correct email verification links.
   - type: web
     name: highfin-backend
     runtime: node
@@ -55,22 +33,22 @@ services:
         value: production
 
       # ── Database ──────────────────────────────────────────────────
-      # src/backend/lib/db.ts → MONGODB_URI
+      # src/backend/lib/db.ts
       - key: MONGODB_URI
         sync: false
 
       # ── Auth ──────────────────────────────────────────────────────
-      # src/backend/lib/jwt.ts → JWT_SECRET
+      # src/backend/lib/jwt.ts
       - key: JWT_SECRET
         sync: false
 
       # ── AI ────────────────────────────────────────────────────────
-      # src/backend/api/chat.ts → ANTHROPIC_API_KEY
+      # src/backend/api/chat.ts
       - key: ANTHROPIC_API_KEY
         sync: false
 
       # ── Email ─────────────────────────────────────────────────────
-      # src/backend/lib/mailer.ts → SMTP_*
+      # src/backend/lib/mailer.ts
       - key: SMTP_HOST
         sync: false
       - key: SMTP_PORT
@@ -84,7 +62,6 @@ services:
       - key: SMTP_FROM
         sync: false
 
-      # ── App URL (used by mailer for email links) ───────────────────
-      # src/backend/lib/mailer.ts → NEXT_PUBLIC_APP_URL
+      # Set to this service's own URL: https://highfin-backend.onrender.com
       - key: NEXT_PUBLIC_APP_URL
         sync: false
