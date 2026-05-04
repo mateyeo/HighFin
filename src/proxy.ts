@@ -16,8 +16,42 @@ const PROTECTED = [
   "/watchlist",
 ];
 
+// Attach CORS headers to any response so the frontend service can call the backend.
+// CORS_ORIGIN is set on the backend Render service to https://highfin.onrender.com
+function withCors(response: NextResponse, request: NextRequest): NextResponse {
+  const origin = request.headers.get("origin") ?? "";
+  const allowed = process.env.CORS_ORIGIN ?? "http://localhost:3000";
+
+  if (origin === allowed || allowed === "*") {
+    response.headers.set("Access-Control-Allow-Origin", origin);
+    response.headers.set("Access-Control-Allow-Credentials", "true");
+    response.headers.set(
+      "Access-Control-Allow-Methods",
+      "GET, POST, PUT, DELETE, PATCH, OPTIONS"
+    );
+    response.headers.set(
+      "Access-Control-Allow-Headers",
+      "Content-Type, Authorization, Cookie"
+    );
+  }
+  return response;
+}
+
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  // ── Handle CORS preflight for all API routes ──────────────────────
+  if (pathname.startsWith("/api/") && request.method === "OPTIONS") {
+    return withCors(new NextResponse(null, { status: 204 }), request);
+  }
+
+  // ── Attach CORS headers to all API responses ──────────────────────
+  if (pathname.startsWith("/api/")) {
+    const response = NextResponse.next();
+    return withCors(response, request);
+  }
+
+  // ── Auth guard for protected pages ────────────────────────────────
   const isProtected = PROTECTED.some((p) => pathname.startsWith(p));
   if (!isProtected) return NextResponse.next();
 
@@ -32,11 +66,9 @@ export async function proxy(request: NextRequest) {
 
   try {
     const secret = new TextEncoder().encode(process.env.JWT_SECRET ?? "");
-    const { payload } = await jwtVerify(token, secret);
-
+    await jwtVerify(token, secret);
     return NextResponse.next();
   } catch {
-    // Expired or invalid token — clear cookie and redirect to login
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     const response = NextResponse.redirect(url);
@@ -47,6 +79,7 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
+    "/api/:path*",
     "/dashboard/:path*",
     "/quiz/:path*",
     "/goal/:path*",

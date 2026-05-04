@@ -65,3 +65,8 @@ services:
       # Set to this service's own URL: https://highfin-backend.onrender.com
       - key: NEXT_PUBLIC_APP_URL
         sync: false
+
+      # Set to the frontend service URL: https://highfin.onrender.com
+      # Tells the backend which origin is allowed to make cross-origin requests
+      - key: CORS_ORIGIN
+        sync: false
