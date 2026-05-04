@@ -21,7 +21,8 @@ export default function DashboardPage() {
   const router = useRouter();
 
   useEffect(() => {
-    if (user?.role === "teacher") router.replace("/teacher");
+    if (!user) { router.replace("/login"); return; }
+    if (user.role === "teacher") router.replace("/teacher");
   }, [user, router]);
 
   if (!user) return null;
