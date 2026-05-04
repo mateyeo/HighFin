@@ -24,10 +24,11 @@ export function clearState(): void {
 
 function emptyState(): AppState {
   return {
-    user: null,
-    quizResult: null,
-    goalPlan: null,
-    portfolio: null,
+    user:             null,
+    quizResult:       null,
+    goalPlan:         null,
+    portfolio:        null,
     simulationResult: null,
+    badges:           [],
   };
 }

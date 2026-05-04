@@ -4,15 +4,6 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useApp } from "@/frontend/context/AppContext";
 
-const studentLinks = [
-  { href: "/dashboard",  label: "Home"      },
-  { href: "/quiz",       label: "Quiz"      },
-  { href: "/goal",       label: "Goal"      },
-  { href: "/portfolio",  label: "Portfolio" },
-  { href: "/simulation", label: "Simulate"  },
-  { href: "/glossary",   label: "Glossary"  },
-];
-
 const teacherLinks = [
   { href: "/teacher",  label: "Dashboard" },
   { href: "/glossary", label: "Glossary"  },
@@ -73,6 +64,18 @@ export default function Nav() {
       </>
     );
   }
+
+  const studentLinks = [
+    { href: "/dashboard",  label: "Home"      },
+    { href: "/quiz",       label: "Quiz"      },
+    { href: "/goal",       label: "Goal"      },
+    { href: "/portfolio",  label: "Portfolio" },
+    { href: "/simulation", label: "Simulate"  },
+    { href: "/glossary",   label: "Glossary"  },
+    { href: "/watchlist",  label: "Watchlist" },
+    { href: "/badges",     label: "Badges"    },
+    ...(user.level >= 2 ? [{ href: "/trade", label: "Trade" }] : []),
+  ];
 
   const links = user.role === "teacher" ? teacherLinks : studentLinks;
 

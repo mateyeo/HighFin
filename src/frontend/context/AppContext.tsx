@@ -8,6 +8,7 @@ import type {
   GoalPlan,
   Portfolio,
   SimulationResult,
+  EarnedBadge,
 } from "@/types";
 import { loadState, saveState, clearState } from "@/frontend/lib/storage";
 import { apiGet, apiPost } from "@/frontend/lib/apiClient";
@@ -19,6 +20,8 @@ interface AppContextValue extends AppState {
   setGoalPlan:         (plan: GoalPlan | null)           => void;
   setPortfolio:        (portfolio: Portfolio | null)     => void;
   setSimulationResult: (result: SimulationResult | null) => void;
+  setBadges:           (badges: EarnedBadge[])           => void;
+  setUser:             (user: User | null)               => void;
   register: (name: string, email: string, password: string, role: string, classCode?: string) => Promise<void>;
   login:    (email: string, password: string) => Promise<void>;
   logout:   () => Promise<void>;
@@ -33,6 +36,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     goalPlan:         null,
     portfolio:        null,
     simulationResult: null,
+    badges:           [],
   });
   const [hydrated,    setHydrated]    = useState(false);
   const [authLoading, setAuthLoading] = useState(true);
@@ -62,11 +66,12 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   async function syncFromServer(user: User) {
-    const [quiz, goal, portfolio, sim] = await Promise.all([
+    const [quiz, goal, portfolio, sim, badges] = await Promise.all([
       apiGet<QuizResult>("/api/quiz"),
       apiGet<GoalPlan>("/api/goal"),
       apiGet<Portfolio>("/api/portfolio"),
       apiGet<SimulationResult>("/api/simulation"),
+      apiGet<EarnedBadge[]>("/api/badges"),
     ]);
     setState((prev) => {
       const next: AppState = {
@@ -75,6 +80,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         goalPlan:         goal       ?? prev.goalPlan,
         portfolio:        portfolio  ?? prev.portfolio,
         simulationResult: sim        ?? prev.simulationResult,
+        badges:           badges     ?? prev.badges,
       };
       saveState(next);
       return next;
@@ -104,6 +110,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error ?? "Registration failed.");
+    // Server sets the session cookie and returns the user — sync immediately.
+    await syncFromServer(data.user as User);
   }
 
   async function login(email: string, password: string) {
@@ -132,6 +140,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       goalPlan:         null,
       portfolio:        null,
       simulationResult: null,
+      badges:           [],
     });
   }
 
@@ -160,6 +169,14 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         setSimulationResult: (simulationResult) => {
           update({ simulationResult });
           if (simulationResult && state.user) apiPost("/api/simulation", simulationResult);
+        },
+
+        setBadges: (badges) => {
+          update({ badges });
+        },
+
+        setUser: (user) => {
+          update({ user });
         },
 
         register,

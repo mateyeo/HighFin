@@ -8,6 +8,62 @@ export interface User {
   classCode?: string;
   emailVerified: boolean;
   createdAt: string;
+  level: 1 | 2;
+}
+
+export type BadgeId = "SIMULATION_COMPLETE" | "FIRST_TRADE" | "DIVERSIFIED" | "MARKET_WATCHER";
+
+export interface EarnedBadge {
+  badgeId: BadgeId;
+  earnedAt: string;
+  redeemed: boolean;
+}
+
+export interface MockStock {
+  symbol: string;
+  name: string;
+  sector: string;
+  basePrice: number;
+  price: number;
+  prevPrice: number;
+  change: number;
+  changePct: number;
+}
+
+export interface TradingPosition {
+  symbol: string;
+  name: string;
+  shares: number;
+  avgCost: number;
+  currentPrice: number;
+  value: number;
+  gainLoss: number;
+  gainLossPct: number;
+}
+
+export interface TradingAccount {
+  cashBalance: number;
+  positions: TradingPosition[];
+  totalValue: number;
+  totalGainLoss: number;
+}
+
+export interface TradeOrder {
+  id?: string;
+  symbol: string;
+  name: string;
+  type: "buy" | "sell";
+  shares: number;
+  price: number;
+  total: number;
+  executedAt: string;
+}
+
+export interface WatchlistItem {
+  symbol: string;
+  name: string;
+  sector: string;
+  addedAt: string;
 }
 
 export type ChatRole = "user" | "assistant";
@@ -113,4 +169,5 @@ export interface AppState {
   goalPlan: GoalPlan | null;
   portfolio: Portfolio | null;
   simulationResult: SimulationResult | null;
+  badges: EarnedBadge[];
 }

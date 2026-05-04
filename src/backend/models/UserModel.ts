@@ -10,6 +10,7 @@ export interface IUser extends Document {
   verificationToken?: string;
   verificationTokenExpiresAt?: Date;
   createdAt: Date;
+  level: 1 | 2;
 }
 
 const UserSchema = new mongoose.Schema<IUser>(
@@ -22,6 +23,7 @@ const UserSchema = new mongoose.Schema<IUser>(
     emailVerified:              { type: Boolean, default: false },
     verificationToken:          { type: String, select: false },
     verificationTokenExpiresAt: { type: Date,   select: false },
+    level:                      { type: Number, default: 1 },
   },
   { timestamps: { createdAt: true, updatedAt: false } }
 );

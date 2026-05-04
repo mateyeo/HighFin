@@ -11,6 +11,9 @@ const PROTECTED = [
   "/simulation",
   "/results",
   "/teacher",
+  "/badges",
+  "/trade",
+  "/watchlist",
 ];
 
 export async function proxy(request: NextRequest) {
@@ -30,12 +33,6 @@ export async function proxy(request: NextRequest) {
   try {
     const secret = new TextEncoder().encode(process.env.JWT_SECRET ?? "");
     const { payload } = await jwtVerify(token, secret);
-
-    if (!payload.emailVerified) {
-      const url = request.nextUrl.clone();
-      url.pathname = "/verify-email";
-      return NextResponse.redirect(url);
-    }
 
     return NextResponse.next();
   } catch {
@@ -57,5 +54,8 @@ export const config = {
     "/simulation/:path*",
     "/results/:path*",
     "/teacher/:path*",
+    "/badges/:path*",
+    "/trade/:path*",
+    "/watchlist/:path*",
   ],
 };
