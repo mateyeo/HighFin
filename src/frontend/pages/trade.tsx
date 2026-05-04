@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useApp } from "@/frontend/context/AppContext";
+import { fetchApi } from "@/frontend/lib/config";
 import { getMarketPrices } from "@/frontend/lib/marketData";
 import type { TradingAccount, TradeOrder } from "@/types";
 
@@ -36,12 +37,12 @@ export default function TradePage() {
   };
 
   const fetchAccount = useCallback(async () => {
-    const res = await fetch("/api/trading/account", { credentials: "same-origin" });
+    const res = await fetchApi("/api/trading/account");
     if (res.ok) setAccount(await res.json() as TradingAccount);
   }, []);
 
   const fetchHistory = useCallback(async () => {
-    const res = await fetch("/api/trading/history", { credentials: "same-origin" });
+    const res = await fetchApi("/api/trading/history");
     if (res.ok) setHistory(await res.json() as TradeOrder[]);
   }, []);
 
@@ -74,7 +75,7 @@ export default function TradePage() {
 
     setExecuting(true);
     try {
-      const res  = await fetch("/api/trading/trade", {
+      const res  = await fetchApi("/api/trading/trade", {
         method:      "POST",
         credentials: "same-origin",
         headers:     { "Content-Type": "application/json" },

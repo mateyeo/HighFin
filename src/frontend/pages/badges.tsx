@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useApp } from "@/frontend/context/AppContext";
+import { fetchApi } from "@/frontend/lib/config";
 import { BADGE_DEFS } from "@/frontend/lib/badges";
 import type { EarnedBadge } from "@/types";
 
@@ -274,7 +275,7 @@ export default function BadgesPage() {
 
   useEffect(() => {
     if (!user) { router.replace("/login"); return; }
-    fetch("/api/badges", { credentials: "same-origin" })
+    fetchApi("/api/badges")
       .then((r) => r.json())
       .then((d: EarnedBadge[]) => setBadges(Array.isArray(d) ? d : []))
       .catch(() => setBadges([]))
@@ -284,7 +285,7 @@ export default function BadgesPage() {
   async function handleRedeem(badgeId: string) {
     setRedeeming(badgeId);
     try {
-      const res = await fetch("/api/badges/redeem", {
+      const res = await fetchApi("/api/badges/redeem", {
         method: "POST", credentials: "same-origin",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ badgeId }),

@@ -4,6 +4,7 @@ import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useApp } from "@/frontend/context/AppContext";
+import { fetchApi } from "@/frontend/lib/config";
 import Button from "@/frontend/components/ui/Button";
 import Card from "@/frontend/components/ui/Card";
 
@@ -62,7 +63,7 @@ function LoginForm() {
           <Button
             variant="secondary"
             onClick={async () => {
-              await fetch("/api/auth/resend-verification", {
+              await fetchApi("/api/auth/resend-verification", {
                 method:  "POST",
                 headers: { "Content-Type": "application/json" },
                 body:    JSON.stringify({ email: unverifiedEmail }),

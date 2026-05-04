@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { useApp } from "@/frontend/context/AppContext";
+import { fetchApi } from "@/frontend/lib/config";
 import type { ChatMessage } from "@/types";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -242,7 +243,7 @@ export default function ChatPanel() {
 
   useEffect(() => {
     if (open && user && !historyLoaded) {
-      fetch("/api/chat", { credentials: "same-origin" })
+      fetchApi("/api/chat")
         .then((r) => r.json())
         .then((data: ChatMessage[]) => {
           if (Array.isArray(data)) setMessages(data);
@@ -272,9 +273,8 @@ export default function ChatPanel() {
     setLoading(true);
 
     try {
-      const res  = await fetch("/api/chat", {
-        method: "POST", credentials: "same-origin",
-        headers: { "Content-Type": "application/json" },
+      const res  = await fetchApi("/api/chat", {
+        method: "POST",
         body: JSON.stringify({ message: trimmed }),
       });
       const data = await res.json();
@@ -306,7 +306,7 @@ export default function ChatPanel() {
 
   async function handleClear() {
     if (user) {
-      await fetch("/api/chat", { method: "DELETE", credentials: "same-origin" });
+      await fetchApi("/api/chat", { method: "DELETE" });
     }
     setMessages([]);
     setHistoryLoaded(false);

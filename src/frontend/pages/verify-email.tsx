@@ -4,6 +4,7 @@ import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useApp } from "@/frontend/context/AppContext";
+import { fetchApi } from "@/frontend/lib/config";
 import type { User } from "@/types";
 import Button from "@/frontend/components/ui/Button";
 
@@ -45,7 +46,7 @@ function VerifyEmailContent() {
   async function handleResend(e: React.FormEvent) {
     e.preventDefault();
     setResendLoading(true);
-    await fetch("/api/auth/resend-verification", {
+    await fetchApi("/api/auth/resend-verification", {
       method:  "POST",
       headers: { "Content-Type": "application/json" },
       body:    JSON.stringify({ email: resendEmail }),

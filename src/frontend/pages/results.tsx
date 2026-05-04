@@ -8,7 +8,7 @@ import { PROFILE_DESCRIPTIONS, RECOMMENDED_ALLOCATIONS } from "@/frontend/lib/qu
 import { SCENARIOS } from "@/frontend/lib/simulation";
 import Button from "@/frontend/components/ui/Button";
 import Card from "@/frontend/components/ui/Card";
-import { APP_URL } from "@/frontend/lib/config";
+import { APP_URL, fetchApi } from "@/frontend/lib/config";
 
 const PRINT_CSS = `
 /* ─── Screen: hide print-only elements ─────────────────────────── */
@@ -347,7 +347,7 @@ export default function ResultsPage() {
       return;
     }
     if (simulationResult && user) {
-      fetch("/api/badges", {
+      fetchApi("/api/badges", {
         method:      "POST",
         credentials: "same-origin",
         headers:     { "Content-Type": "application/json" },

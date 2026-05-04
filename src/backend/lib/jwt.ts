@@ -26,13 +26,16 @@ export function verifyToken(token: string): TokenPayload {
   return jwt.verify(token, secret()) as TokenPayload;
 }
 
+const isProd = process.env.NODE_ENV === "production";
+
 /** Attach a secure httpOnly session cookie to a NextResponse. */
 export function setSessionCookie(response: NextResponse, payload: TokenPayload): void {
   const token = signToken(payload);
   response.cookies.set(COOKIE_NAME, token, {
     httpOnly: true,
-    secure:   process.env.NODE_ENV === "production",
-    sameSite: "lax",
+    secure:   isProd,
+    // "none" required for cross-origin requests (frontend ↔ backend on separate domains)
+    sameSite: isProd ? "none" : "lax",
     path:     "/",
     maxAge:   MAX_AGE,
   });
@@ -42,8 +45,8 @@ export function setSessionCookie(response: NextResponse, payload: TokenPayload):
 export function clearSessionCookie(response: NextResponse): void {
   response.cookies.set(COOKIE_NAME, "", {
     httpOnly: true,
-    secure:   process.env.NODE_ENV === "production",
-    sameSite: "lax",
+    secure:   isProd,
+    sameSite: isProd ? "none" : "lax",
     path:     "/",
     maxAge:   0,
   });

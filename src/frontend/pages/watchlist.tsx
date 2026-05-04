@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useApp } from "@/frontend/context/AppContext";
+import { fetchApi } from "@/frontend/lib/config";
 import { getMarketPrices, STOCK_LIST } from "@/frontend/lib/marketData";
 import type { WatchlistItem } from "@/types";
 
@@ -32,7 +33,7 @@ export default function WatchlistPage() {
   };
 
   const fetchWatchlist = useCallback(async () => {
-    const res = await fetch("/api/watchlist", { credentials: "same-origin" });
+    const res = await fetchApi("/api/watchlist");
     if (res.ok) {
       const data = await res.json() as WatchlistItem[];
       setWatchlist(Array.isArray(data) ? data : []);
@@ -51,7 +52,7 @@ export default function WatchlistPage() {
   async function addToWatchlist(symbol: string) {
     setAdding(symbol);
     try {
-      const res  = await fetch("/api/watchlist", {
+      const res  = await fetchApi("/api/watchlist", {
         method:      "POST",
         credentials: "same-origin",
         headers:     { "Content-Type": "application/json" },
@@ -74,7 +75,7 @@ export default function WatchlistPage() {
   async function removeFromWatchlist(symbol: string) {
     setRemoving(symbol);
     try {
-      const res = await fetch("/api/watchlist", {
+      const res = await fetchApi("/api/watchlist", {
         method:      "DELETE",
         credentials: "same-origin",
         headers:     { "Content-Type": "application/json" },
