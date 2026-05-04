@@ -17,6 +17,10 @@ services:
       - key: NEXT_PUBLIC_APP_URL
         sync: false
 
+      # Needed by proxy.ts to verify JWT on protected pages (/dashboard, /quiz, etc.)
+      - key: JWT_SECRET
+        sync: false
+
   # ── Backend API service (src/backend — API routes + models + lib) ──
   # NEXT_PUBLIC_APP_URL must point to this service's own URL
   # so the mailer builds correct email verification links.
