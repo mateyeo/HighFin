@@ -1,8 +1,12 @@
+import { APP_URL } from "@/frontend/lib/config";
+
 // Auth tokens are stored in httpOnly cookies — the browser sends them
 // automatically on every same-origin request.  No token management here.
 
 async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
-  const res = await fetch(path, {
+  // Use an absolute URL when window is unavailable (SSR), relative otherwise
+  const base = typeof window === "undefined" ? APP_URL : "";
+  const res = await fetch(`${base}${path}`, {
     ...options,
     credentials: "same-origin",
     headers: {

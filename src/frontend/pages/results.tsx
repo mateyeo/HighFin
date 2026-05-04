@@ -8,6 +8,7 @@ import { PROFILE_DESCRIPTIONS, RECOMMENDED_ALLOCATIONS } from "@/frontend/lib/qu
 import { SCENARIOS } from "@/frontend/lib/simulation";
 import Button from "@/frontend/components/ui/Button";
 import Card from "@/frontend/components/ui/Card";
+import { APP_URL } from "@/frontend/lib/config";
 
 const PRINT_CSS = `
 /* ─── Screen: hide print-only elements ─────────────────────────── */
@@ -389,10 +390,11 @@ export default function ResultsPage() {
       profile   ? `Investor Profile: ${profile.title} (Score ${quizResult?.score}/100)` : null,
       goalPlan  ? `Goal: ${goalPlan.goalType} — target ${formatCurrency(goalPlan.targetAmount)} in ${goalPlan.timeHorizon} yrs` : null,
       simulationResult ? `Simulation: Final Value ${formatCurrency(simulationResult.finalValue)}, Growth ${formatCurrency(simulationResult.totalGrowth)}` : null,
+      `Try it yourself: ${APP_URL}`,
     ].filter(Boolean).join("\n");
 
     if (navigator.share) {
-      await navigator.share({ title: "My HighFin Results", text }).catch(() => {});
+      await navigator.share({ title: "My HighFin Results", url: APP_URL, text }).catch(() => {});
     } else {
       await navigator.clipboard.writeText(text);
       alert("Results copied to clipboard!");
